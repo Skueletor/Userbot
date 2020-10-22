@@ -11,7 +11,7 @@ from ..utils import admin_cmd, edit_or_reply, sudo_cmd
 @bot.on(sudo_cmd(pattern="calc (.*)", allow_sudo=True))
 async def _(car):
     cmd = car.text.split(" ", maxsplit=1)[1]
-    event = await edit_or_reply(car, "Calculating ...")
+    event = await edit_or_reply(car, "Calculando...")
     old_stderr = sys.stderr
     old_stdout = sys.stdout
     redirected_output = sys.stdout = io.StringIO()
@@ -34,8 +34,8 @@ async def _(car):
     elif stdout:
         evaluation = stdout
     else:
-        evaluation = "Sorry I cant find result for the given equation"
-    final_output = "**EQUATION**: `{}` \n\n **SOLUTION**: \n`{}` \n".format(
+        evaluation = "Lo siento, no puedo encontrar el resultado de la ecuación dada"
+    final_output = "**ECUACIÓN**: `{}` \n\n **SOLUCIÓN**: \n`{}` \n".format(
         cmd, evaluation
     )
     await event.edit(final_output)
