@@ -30,7 +30,7 @@ async def _(event):
     elif "|" in input_str:
         lan, text = input_str.split("|")
     else:
-        await edit_or_reply(event, "`.tl LanguageCode` as reply to a message")
+        await edit_or_reply(event, "`.tl LanguageCode` respondiendo el mensaje que quieres que sea traducido")
         return
     text = deEmojify(text.strip())
     lan = lan.strip()
@@ -40,7 +40,7 @@ async def _(event):
         after_tr_text = translated.text
         # TODO: emojify the :
         # either here, or before translation
-        output_str = """**TRANSLATED** from {} to {}
+        output_str = """**TRADUCIDO** from {} to {}
 {}""".format(
             translated.src, lan, after_tr_text
         )
@@ -61,12 +61,12 @@ async def translateme(trans):
     elif textx:
         message = textx.text
     else:
-        await edit_or_reply(trans, "`Give a text or reply to a message to translate!`")
+        await edit_or_reply(trans, "`¡Envíe un mensaje de texto o responda a un mensaje para traducir!`")
         return
     try:
         reply_text = translator.translate(deEmojify(message), dest=TRT_LANG)
     except ValueError:
-        await edit_or_reply(trans, "Invalid destination language.")
+        await edit_or_reply(trans, "Idioma de destino inválido.")
         return
     source_lan = LANGUAGES[f"{reply_text.src.lower()}"]
     transl_lan = LANGUAGES[f"{reply_text.dest.lower()}"]
