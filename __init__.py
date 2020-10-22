@@ -1,117 +1,146 @@
+import math
 import os
-import sys
+import re
 import time
-from distutils.util import strtobool as sb
-from logging import DEBUG, INFO, basicConfig, getLogger
 
-from dotenv import load_dotenv
-from pylast import LastFMNetwork, md5
-from pySmartDL import SmartDL
-from requests import get
-from telethon import TelegramClient
-from telethon.sessions import StringSession
+import heroku3
+import requests
+import spamwatch as spam_watch
 
-from var import Var
+from .. import *
+from ..Config import Config
 
-StartTime = time.time()
-catversion = "2.9.0"
+Heroku = heroku3.from_key(Config.HEROKU_API_KEY)
+heroku_api = "https://api.heroku.com"
+HEROKU_APP_NAME = Config.HEROKU_APP_NAME
+HEROKU_API_KEY = Config.HEROKU_API_KEY
 
-if Var.STRING_SESSION:
-    session_name = str(Var.STRING_SESSION)
-    if session_name.endswith("="):
-        bot = TelegramClient(StringSession(session_name), Var.APP_ID, Var.API_HASH)
-    else:
-        bot = TelegramClient(
-            "TG_BOT_TOKEN", api_id=Var.APP_ID, api_hash=Var.API_HASH
-        ).start(bot_token=Var.STRING_SESSION)
+if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
+    os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
+
+thumb_image_path = Config.TMP_DOWNLOAD_DIRECTORY + "thumb_image.jpg"
+
+# thumb image
+if Config.THUMB_IMAGE is not None:
+    with open(thumb_image_path, "wb") as f:
+        f.write(requests.get(Config.THUMB_IMAGE).content)
+
+cat_users = [bot.uid]
+if Config.SUDO_USERS:
+    for user in Config.SUDO_USERS:
+        cat_users.append(user)
+
+
+def check(cat):
+    if "/start" in cat:
+        return True
+    try:
+        hi = re.search(cat, "(a|b|c|d)")
+    except:
+        hi = False
+    return bool(hi)
+
+
+PM_START = []
+
+if Config.PRIVATE_GROUP_BOT_API_ID is None:
+    BOTLOG = False
+    BOTLOG_CHATID = "me"
 else:
-    session_name = "startup"
-    bot = TelegramClient(session_name, Var.APP_ID, Var.API_HASH)
+    BOTLOG = True
+    BOTLOG_CHATID = Config.PRIVATE_GROUP_BOT_API_ID
 
-# PaperPlaneExtended Support Vars
-ENV = os.environ.get("ENV", False)
+# Gdrive
+G_DRIVE_CLIENT_ID = Config.G_DRIVE_CLIENT_ID
+G_DRIVE_CLIENT_SECRET = Config.G_DRIVE_CLIENT_SECRET
+G_DRIVE_DATA = Config.G_DRIVE_DATA
+G_DRIVE_FOLDER_ID = Config.G_DRIVE_FOLDER_ID
+TMP_DOWNLOAD_DIRECTORY = Config.TMP_DOWNLOAD_DIRECTORY
 
-CAT_ID = ["1035034432", "551290198"]
+# UniBorg Telegram UseRBot
+# Copyright (C) 2020 @UniBorg
+# This code is licensed under
+# the "you can't use this for anything - public or private,
+# unless you know the two prime factors to the number below" license
+# 543935563961418342898620676239017231876605452284544942043082635399903451854594062955
+# വിവരണം അടിച്ചുമാറ്റിക്കൊണ്ട് പോകുന്നവർ
+# ക്രെഡിറ്റ് വെച്ചാൽ സന്തോഷമേ ഉള്ളു..!
+# uniborg
 
-# Bot Logs setup:
-if bool(ENV):
-    CONSOLE_LOGGER_VERBOSE = sb(os.environ.get("CONSOLE_LOGGER_VERBOSE", "False"))
-    if CONSOLE_LOGGER_VERBOSE:
-        basicConfig(
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-            level=DEBUG,
-        )
+
+def check_data_base_heal_th():
+    # https://stackoverflow.com/a/41961968
+    is_database_working = False
+    output = "No Database is set"
+    if not Config.DB_URI:
+        return is_database_working, output
+    from userbot.plugins.sql_helper import SESSION
+
+    try:
+        # to check database we will execute raw query
+        SESSION.execute("SELECT 1")
+    except Exception as e:
+        output = f"❌ {str(e)}"
+        is_database_working = False
     else:
-        basicConfig(
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=INFO
-        )
-    LOGS = getLogger(__name__)
+        output = "Functioning"
+        is_database_working = True
+    return is_database_working, output
 
-    # Check if the config was edited by using the already used variable.
-    # Basically, its the 'virginity check' for the config file ;)
-    CONFIG_CHECK = os.environ.get(
-        "___________PLOX_______REMOVE_____THIS_____LINE__________", None
-    )
-    if CONFIG_CHECK:
-        LOGS.info(
-            "Please remove the line mentioned in the first hashtag from the config.env file"
-        )
-        quit(1)
-    BOTLOG_CHATID = int(os.environ.get("PRIVATE_GROUP_BOT_API_ID", "-100"))
-    BOTLOG = sb(os.environ.get("BOTLOG", "True"))
-    CONSOLE_LOGGER_VERBOSE = sb(os.environ.get("CONSOLE_LOGGER_VERBOSE", "False"))
-    # Chrome Driver and Headless Google Chrome Binaries
-    CHROME_DRIVER = os.environ.get(
-        "CHROME_DRIVER", "/app/.chromedriver/bin/chromedriver"
-    )
-    GOOGLE_CHROME_BIN = os.environ.get(
-        "GOOGLE_CHROME_BIN", "/app/.apt/usr/bin/google-chrome"
-    )
-    # OpenWeatherMap API Key
-    OPEN_WEATHER_MAP_APPID = os.environ.get("OPEN_WEATHER_MAP_APPID", None)
-    # Youtube API key
-    YOUTUBE_API_KEY = os.environ.get("YOUTUBE_API_KEY", None)
-    # Default .alive name
-    ALIVE_NAME = os.environ.get("ALIVE_NAME", None)
-    AUTONAME = os.environ.get("AUTONAME", None)
-    UPSTREAM_REPO_URL = os.environ.get(
-        "UPSTREAM_REPO_URL", "https://github.com/sandy1709/catuserbot.git"
-    )
-    # Last.fm Module
-    BIO_PREFIX = os.environ.get("BIO_PREFIX", None)
-    DEFAULT_BIO = os.environ.get("DEFAULT_BIO", None)
-    LASTFM_API = os.environ.get("LASTFM_API", None)
-    LASTFM_SECRET = os.environ.get("LASTFM_SECRET", None)
-    LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME", None)
-    LASTFM_PASSWORD_PLAIN = os.environ.get("LASTFM_PASSWORD", None)
-    # Google Drive Module
-    G_DRIVE_CLIENT_ID = os.environ.get("G_DRIVE_CLIENT_ID", None)
-    G_DRIVE_CLIENT_SECRET = os.environ.get("G_DRIVE_CLIENT_SECRET", None)
-    G_DRIVE_AUTH_TOKEN_DATA = os.environ.get("G_DRIVE_AUTH_TOKEN_DATA", None)
-    GDRIVE_FOLDER_ID = os.environ.get("GDRIVE_FOLDER_ID", None)
-    TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TEMP_DOWNLOAD_DIRECTORY", "./downloads")
-    # time.py
-    COUNTRY = str(os.environ.get("COUNTRY", ""))
-    TZ_NUMBER = int(os.environ.get("TZ_NUMBER", 1))
+
+# spamwatch support
+if Config.SPAMWATCH_API:
+    token = Config.SPAMWATCH_API
+    spamwatch = spam_watch.Client(token)
 else:
-    # Put your ppe vars here if you are using local hosting
-    PLACEHOLDER = None
+    spamwatch = None
 
-# Global Variables
-COUNT_MSG = 0
-USERS = {}
-COUNT_PM = {}
-LASTMSG = {}
-CMD_HELP = {}
-ISAFK = False
-AFKREASON = None
-CMD_LIST = {}
-SUDO_LIST = {}
-# for later purposes
-INT_PLUG = ""
-LOAD_PLUG = {}
 
-# showing imports error
+async def catalive():
+    _, check_sgnirts = check_data_base_heal_th()
+    sudo = "Enabled" if Config.SUDO_USERS else "Disabled"
+    uptime = await get_readable_time((time.time() - StartTime))
+    try:
+        useragent = (
+            "Mozilla/5.0 (Linux; Android 10; SM-G975F) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/80.0.3987.149 Mobile Safari/537.36"
+        )
+        user_id = Heroku.account().id
+        headers = {
+            "User-Agent": useragent,
+            "Authorization": f"Bearer {Config.HEROKU_API_KEY}",
+            "Accept": "application/vnd.heroku+json; version=3.account-quotas",
+        }
+        path = "/accounts/" + user_id + "/actions/get-quota"
+        r = requests.get(heroku_api + path, headers=headers)
+        result = r.json()
+        quota = result["account_quota"]
+        quota_used = result["quota_used"]
 
-from .helpers import *
-from .helpers import functions as catdef
+        # Used
+        remaining_quota = quota - quota_used
+        math.floor(remaining_quota / quota * 100)
+        minutes_remaining = remaining_quota / 60
+        hours = math.floor(minutes_remaining / 60)
+        minutes = math.floor(minutes_remaining % 60)
+        # Current
+        App = result["apps"]
+        try:
+            App[0]["quota_used"]
+        except IndexError:
+            AppQuotaUsed = 0
+        else:
+            AppQuotaUsed = App[0]["quota_used"] / 60
+            math.floor(App[0]["quota_used"] * 100 / quota)
+        AppHours = math.floor(AppQuotaUsed / 60)
+        AppMinutes = math.floor(AppQuotaUsed % 60)
+        dyno = f"{AppHours}h {AppMinutes}m/{hours}h {minutes}m"
+    except Exception as e:
+        dyno = e
+    return f"Catuserbot Stats\
+                 \n\nDatabase : {check_sgnirts}\
+                  \nSudo : {sudo}\
+                  \nUptime : {uptime}\
+                  \nDyno : {dyno}\
+                  "
