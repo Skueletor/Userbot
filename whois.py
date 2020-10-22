@@ -65,9 +65,9 @@ async def _(event):
         cas = "**Antispam(CAS) Banned :** `Couldn't Fetch`"
     caption = """**Info of [{}](tg://user?id={}):
    -🔖ID : **`{}`
-   **-**👥**Groups in Common : **`{}`
-   **-**🌏**Data Centre Number : **`{}`
-   **-**🔏**Restricted by telegram : **`{}`
+   **-**👥**Grupos en común : **`{}`
+   **-**🌏**Número del centro de datos : **`{}`
+   **-**🔏**Restrigido por Telegram : **`{}`
    **-**🦅{}
    **-**👮‍♂️{}
 """.format(
@@ -215,19 +215,19 @@ async def fetch_info(replied_user, event):
     )
     last_name = last_name.replace("\u2060", "") if last_name else (" ")
     username = "@{}".format(username) if username else ("This User has no Username")
-    user_bio = "This User has no About" if not user_bio else user_bio
-    caption = "<b><i>USER INFO from druv's database :</i></b>\n\n"
-    caption += f"<b>👤 First Name:</b> {first_name} {last_name}\n"
-    caption += f"<b>🤵 Username:</b> {username}\n"
+    user_bio = "Este usuario no tiene biografía" if not user_bio else user_bio
+    caption = "<b><i>INFO DEL USUARIO desde la base de datos de Durov :</i></b>\n\n"
+    caption += f"<b>👤 Primer nombre:</b> {first_name} {last_name}\n"
+    caption += f"<b>🤵 Alias:</b> {username}\n"
     caption += f"<b>🔖 ID:</b> <code>{user_id}</code>\n"
-    caption += f"<b>🌏 Data Centre ID:</b> {dc_id}\n"
-    caption += f"<b>🖼 Number of Profile Pics:</b> {replied_user_profile_photos_count}\n"
-    caption += f"<b>🤖 Is Bot:</b> {is_bot}\n"
-    caption += f"<b>🔏 Is Restricted:</b> {restricted}\n"
-    caption += f"<b>🌐 Is Verified by Telegram:</b> {verified}\n\n"
-    caption += f"<b>✍️ Bio:</b> \n<code>{user_bio}</code>\n\n"
-    caption += f"<b>👥 Common Chats with this user:</b> {common_chat}\n"
-    caption += f"<b>🔗 Permanent Link To Profile:</b> "
+    caption += f"<b>🌏 ID del centro de datos:</b> {dc_id}\n"
+    caption += f"<b>🖼 Número de fotos de perfil:</b> {replied_user_profile_photos_count}\n"
+    caption += f"<b>🤖 Es bot:</b> {is_bot}\n"
+    caption += f"<b>🔏 Está restringido:</b> {restricted}\n"
+    caption += f"<b>🌐 Está verificado por Telegram:</b> {verified}\n\n"
+    caption += f"<b>✍️ Biografía:</b> \n<code>{user_bio}</code>\n\n"
+    caption += f"<b>👥 Chats en común con este usuario:</b> {common_chat}\n"
+    caption += f"<b>🔗 Link permanente a su perfil:</b> "
     caption += f'<a href="tg://user?id={user_id}">{first_name}</a>'
     return photo, caption
 
