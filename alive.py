@@ -23,13 +23,13 @@ async def amireallyalive(alive):
     if alive.reply_to_msg_id:
         reply_to_id = await alive.get_reply_message()
     if CAT_IMG:
-        cat_caption = f"**✮ MY BOT IS RUNNING SUCCESFULLY ✮**\n\n"
-        cat_caption += f"**✧ Database :** `{check_sgnirts}`\n"
-        cat_caption += f"**✧ Telethon version :** `{version.__version__}\n`"
-        cat_caption += f"**✧ Catuserbot Version :** `{catversion}`\n"
-        cat_caption += f"**✧ Python Version :** `{python_version()}\n`"
-        cat_caption += f"**✧ Uptime :** `{uptime}\n`"
-        cat_caption += f"**✧ My Master:** [{DEFAULTUSER}](tg://user?id={hmm})\n"
+        cat_caption = f"**✮ MI BOT ESTÁ FUNCIONANDO CORRECTAMENTE ✮**\n\n"
+        cat_caption += f"**✧ Base de datos :** `{check_sgnirts}`\n"
+        cat_caption += f"**✧ Versión de Telethon :** `{version.__version__}\n`"
+        cat_caption += f"**✧ Versión del bot :** `{catversion}`\n"
+        cat_caption += f"**✧ Versión de Python :** `{python_version()}\n`"
+        cat_caption += f"**✧ Tiempo de actividad :** `{uptime}\n`"
+        cat_caption += f"**✧ Diseñador del bot:** [{DEFAULTUSER}](tg://user?id={hmm})\n"
         await borg.send_file(
             alive.chat_id, CAT_IMG, caption=cat_caption, reply_to=reply_to_id
         )
@@ -37,13 +37,13 @@ async def amireallyalive(alive):
     else:
         await edit_or_reply(
             alive,
-            f"**✮ MY BOT IS RUNNING SUCCESFULLY ✮**\n\n"
-            f"**✧ Database :** `{check_sgnirts}`\n"
-            f"**✧ Telethon Version :** `{version.__version__}\n`"
-            f"**✧ Catuserbot Version :** `{catversion}`\n"
+            f"**✮ MI BOT ESTÁ FUNCIONANDO CORRECTAMENTE ✮**\n\n"
+            f"**✧ Base de datos :** `{check_sgnirts}`\n"
+            f"**✧ Versión de Telethon :** `{version.__version__}\n`"
+            f"**✧ Versión del bot :** `{catversion}`\n"
             f"**✧ Python Version :** `{python_version()}\n`"
-            f"**✧ Uptime :** `{uptime}\n`"
-            f"**✧ My Master:** [{DEFAULTUSER}](tg://user?id={hmm})\n",
+            f"**✧ Tiempo de actividad :** `{uptime}\n`"
+            f"**✧ Diseñador del bot:** [{DEFAULTUSER}](tg://user?id={hmm})\n",
         )
 
 
@@ -57,11 +57,11 @@ async def amireallyalive(alive):
     if alive.reply_to_msg_id:
         reply_to_id = await alive.get_reply_message()
     hmm = bot.uid
-    cat_caption = f"**Catuserbot is Up and Running**\n"
-    cat_caption += f"**  -Telethon version :** `{version.__version__}\n`"
-    cat_caption += f"**  -Catuserbot Version :** `{catversion}`\n"
-    cat_caption += f"**  -Python Version :** `{python_version()}\n`"
-    cat_caption += f"**  -My peru Master:** [{DEFAULTUSER}](tg://user?id={hmm})\n"
+    cat_caption = f"**Mi bot está en funcionamiento**\n"
+    cat_caption += f"**  -Versión de Telethon :** `{version.__version__}\n`"
+    cat_caption += f"**  -Versión del bot :** `{catversion}`\n"
+    cat_caption += f"**  -Versión de Python :** `{python_version()}\n`"
+    cat_caption += f"**  -Diseñador del bot:** [{DEFAULTUSER}](tg://user?id={hmm})\n"
     results = await bot.inline_query(tgbotusername, cat_caption)  # pylint:disable=E0602
     await results[0].click(alive.chat_id, reply_to=reply_to_id, hide_via=True)
     await alive.delete()
@@ -93,7 +93,7 @@ def check_data_base_heal_th():
         output = f"❌ {str(e)}"
         is_database_working = False
     else:
-        output = "Functioning Normally"
+        output = "Funcionando normalmente"
         is_database_working = True
     return is_database_working, output
 
