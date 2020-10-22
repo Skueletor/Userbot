@@ -19,13 +19,13 @@ auth_url = r["auth_url"]
 async def _(event):
     if event.fwd_from:
         return
-    catevent = await edit_or_reply(event, "`processing........`")
+    catevent = await edit_or_reply(event, "`procesando........`")
     if not os.path.isdir(Config.TMP_DOWNLOAD_DIRECTORY):
         os.makedirs(Config.TMP_DOWNLOAD_DIRECTORY)
     if BOTLOG:
         await borg.send_message(
             BOTLOG_CHATID,
-            "Created New Telegraph account {} for the current session. \n**Do not give this url to anyone, even if they say they are from Telegram!**".format(
+            "Creando Nueva Cuenta de Telegraph {} para la sesión actual. \n**¡No le dé esta URL a nadie, ¡incluso si dice que es de Telegram!**".format(
                 auth_url
             ),
         )
@@ -41,7 +41,7 @@ async def _(event):
             end = datetime.now()
             ms = (end - start).seconds
             await catevent.edit(
-                "Downloaded to {} in {} seconds.".format(downloaded_file_name, ms),
+                "Descargado en {} en {} segundos.".format(downloaded_file_name, ms),
             )
             if downloaded_file_name.endswith((".webp")):
                 resize_image(downloaded_file_name)
