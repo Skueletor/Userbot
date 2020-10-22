@@ -28,24 +28,24 @@ async def _(event):
         if not event.is_private:
             return
         PM = (
-            "Hello. You are accessing the availabe menu of my master, "
+            "Hola. Estás accediendo al menú disponible de Skueletor, "
             f"{DEFAULTUSER}.\n"
-            "__Let's make this smooth and let me know why you are here.__\n"
-            "**Choose one of the following reasons why you are here:**\n\n"
-            "`a`. To chat with my master\n"
-            "`b`. To spam my master's inbox.\n"
-            "`c`. To enquire something\n"
-            "`d`. To request something\n"
+            "__Hagamos esto sin problemas y déjeme saber por qué está aquí.__\n"
+            "**Elija una de las siguientes razones por las que está aquí:**\n\n"
+            "`a`. Para chatear con Skueletor.\n"
+            "`b`. Para enviar spam a la bandeja de entrada de Skueletor.\n"
+            "`c`. Para preguntar algo.\n"
+            "`d`. Para pedir algo.\n"
         )
         ONE = (
-            "__Okay. Your request has been registered. Do not spam my master's inbox.You can expect a reply within 24 light years. He is a busy man, unlike you probably.__\n\n"
-            "**⚠️ You will be blocked and reported if you spam nibba. ⚠️**\n\n"
-            "__Use__ `/start` __to go back to the main menu.__"
+            "__Bueno. Su solicitud ha sido registrada. No envíes spam a la bandeja de entrada de mi maestro. Puedes esperar una respuesta en 24 años luz. Es un hombre ocupado, probablemente a diferencia de ti.__\n\n"
+            "**⚠️ Serás bloqueado y reportado si envías spam a Skueletor. ⚠️**\n\n"
+            "__Utiliza__ `/start` __para volver al menú principal.__"
         )
-        TWO = " `███████▄▄███████████▄  \n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓███░░░░░░░░░░░░█\n██████▀▀▀█░░░░██████▀  \n░░░░░░░░░█░░░░█  \n░░░░░░░░░░█░░░█  \n░░░░░░░░░░░█░░█  \n░░░░░░░░░░░█░░█  \n░░░░░░░░░░░░▀▀ `\n\n**So uncool, this is not your home. Go bother someone else. You have been blocked and reported until further notice.**"
-        THREE = "__Okay. My master has not seen your message yet.He usually responds to people,though idk about retarted ones.__\n __He'll respond when he comes back, if he wants to.There's already a lot of pending messages😶__\n **Please do not spam unless you wish to be blocked and reported.**"
-        FOUR = "`Okay. please have the basic manners as to not bother my master too much. If he wishes to help you, he will respond to you soon.`\n**Do not ask repeatdly else you will be blocked and reported.**"
-        LWARN = "**This is your last warning. DO NOT send another message else you will be blocked and reported. Keep patience. My master will respond you ASAP.**\n__Use__ `/start` __to go back to the main menu.__"
+        TWO = " `███████▄▄███████████▄  \n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓███░░░░░░░░░░░░█\n██████▀▀▀█░░░░██████▀  \n░░░░░░░░░█░░░░█  \n░░░░░░░░░░█░░░█  \n░░░░░░░░░░░█░░█  \n░░░░░░░░░░░█░░█  \n░░░░░░░░░░░░▀▀ `\n\n**Que aburrido eres, esta no es tu casa. Ve a molestar a alguien más. Ha sido bloqueado y denunciado hasta nuevo aviso.**"
+        THREE = "__Bueno. Skueletor aún no ha visto tu mensaje. Por lo general, responde a las personas, aunque no le gustan las repetidas.__\n __Él responderá cuando regrese, si quiere. Ya hay muchos mensajes pendientes.😶__\n **No envíe spam a menos que desee ser bloqueado y denunciado.**"
+        FOUR = "`Bueno. por favor tenga los modales básicos para no molestar demasiado a Skueletor. Si desea ayudarlo, pronto le responderá.`\n**No pregunte repetidamente, de lo contrario será bloqueado y reportado.**"
+        LWARN = "**Esta es tu última advertencia. NO envíes otro mensaje, de lo contrario será bloqueado y denunciado. Manten la paciencia. Skueletor te responderá lo antes posible.**\n__Utiliza__ `/start` __para volver al menú principal.__"
         try:
             async with event.client.conversation(chat) as conv:
                 if pmpermit_sql.is_approved(chat_id):
@@ -118,7 +118,7 @@ async def _(event):
                         return
                     await event.client.send_message(
                         chat,
-                        "You have entered an invalid command. Please send `/start` again or do not send another message if you do not wish to be blocked and reported.",
+                        "Ha introducido un comando no válido. Por favor envía `/start` nuevamente o no envíe otro mensaje si no desea ser bloqueado y reportado como spam.",
                     )
                     response = await conv.get_response(chat)
                     z = response.text
