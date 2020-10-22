@@ -29,7 +29,7 @@ async def fastpurger(purg):
     else:
         await edit_or_reply(
             purg,
-            "`No message specified.`",
+            "`Ningún mensaje especificado.`",
         )
         return
 
@@ -37,13 +37,13 @@ async def fastpurger(purg):
         await purg.client.delete_messages(chat, msgs)
     done = await purg.client.send_message(
         purg.chat_id,
-        "Fast purge complete!\nPurged " + str(count) + " messages.",
+        "¡Eliminación rápida!\nMensajes eliminados: " + str(count) + " By: @DKzippO",
     )
 
     if BOTLOG:
         await purg.client.send_message(
             BOTLOG_CHATID,
-            "#PURGE \nPurge of " + str(count) + " messages done successfully.",
+            "#PURGE \nPurge of " + str(count) + "mensajes eliminados con éxito.",
         )
     await sleep(2)
     await done.delete()
@@ -82,7 +82,7 @@ async def purgeme(delme):
 @bot.on(sudo_cmd(allow_sudo=True, pattern="del$"))
 @errors_handler
 async def delete_it(delme):
-    """ For .del command, delete the replied message. """
+    """ El comando .del, elimina el mensaje respondido. """
     msg_src = await delme.get_reply_message()
     if delme.reply_to_msg_id:
         try:
